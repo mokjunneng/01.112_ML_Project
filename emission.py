@@ -1,3 +1,6 @@
+import sys
+
+
 # Global variables
 tags = []
 obs = []
@@ -67,8 +70,13 @@ def create_test_result_file(test_result, filename):
                 f.write(f"{word} {tag}\n")
             f.write("\n")
 
-
 if __name__ == "__main__":
-    e_dict = train("train")
-    tag_sequences = test(e_dict, "dev.in")
+    if len(sys.argv) < 3:
+        print ('Please make sure you have installed Python 3.4 or above!')
+        print ("Usage on Windows:  python emission.py [train file] [dev.in file]")
+        print ("Usage on Linux/Mac:  python3 emission.py [train file] [dev.in file]")
+        sys.exit()
+
+    e_dict = train(sys.argv[1])
+    tag_sequences = test(e_dict, sys.argv[2])
     create_test_result_file(tag_sequences, "dev.p2.out")
