@@ -59,6 +59,7 @@ def test(params, file=None):
             for tag in tags:
                 y_arg = params[(word_copy, tag)] if params.get((word_copy, tag)) else 0
                 if y_arg > y_arg_max:
+                    y_arg_max = y_arg
                     tag_arg_max = tag
             tag_sequence.append((word, tag_arg_max))
     return tag_sequences
