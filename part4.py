@@ -3,7 +3,7 @@ import sys
 
 def estimateTransition(train_file):
     
-    with open(train_file, 'r') as f:
+    with open(train_file, 'r', encoding="utf-8") as f:
         data = f.read().rstrip().splitlines() #removes empty array at the end and splits each line into an array
 
     counts_tuv_dict = {} #count transition from t,u --> v
@@ -78,14 +78,16 @@ if __name__ == "__main__":
         print ("Running default train file :'{0}'".format(train_file))
         out_dict = estimateTransition(train_file)
         for k,v in out_dict.items():
-            print ("{0}: {1}".format(k,v))
+            print ("({0}, {1} -> {2}): {3}".format(k[0],k[1],k[2],v))
+        print ("Run finish train file :'{0}'".format(train_file))
 
     elif len(sys.argv) == 2:
         train_file = sys.argv[1]
         print ("Running selected train file :'{0}'".format(train_file))
         out_dict = estimateTransition(train_file)
         for k,v in out_dict.items():
-            print ("{0}: {1}".format(k,v))
+            print ("({0}, {1} -> {2}): {3}".format(k[0],k[1],k[2],v))
+        print ("Run finish train file :'{0}'".format(train_file))
 
 
     
