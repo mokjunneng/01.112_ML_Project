@@ -38,7 +38,7 @@ def calc_e(y_count_dict, emission_count_dict, k):
         e[(word, tag)] = emission_count_dict[(word, tag)] / (y_count_dict[tag] + k)
     # Handle UNK case
     for tag in y_count_dict.keys():
-        e[("UNK", tag)] = k / (y_count_dict[tag] + k)  
+        e[("#UNK#", tag)] = k / (y_count_dict[tag] + k)  
     return e
 
 #filename = "/Users/ganr/Desktop/ML/Project/EN/train" #change the file name here to run
