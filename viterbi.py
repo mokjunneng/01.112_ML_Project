@@ -14,7 +14,6 @@ def viterbi(e,q, sentence):
     
     ## --- Initialising array --- ##
     pi1 = [[0 for x in range(len(sentence))] for y in range(len(T))]  #x is number of words (col) #y is number of states/tags
-    pi_index = [] #for backtracking
 
     # --- for first word (column) --- #
     if sentence[0] not in xs:
@@ -22,10 +21,8 @@ def viterbi(e,q, sentence):
 
     for i in range(len(T)):    
         value = q.get((T[i],'START'),0) * e.get((sentence[0], T[i]), 0)   
-        pi1[i][0] = value
-    first_col = get_column(pi1,0)
-    pi_index.append(first_col.index(max(first_col))) #save highest starting probability argmax()
-    
+        pi1[i][0] = ('START', value)
+        # print (pi1[i][0]) 
     # ----- for second word / col to k --- #
     for k in range(1, len(sentence)):
         if sentence[k] not in xs:
@@ -33,35 +30,38 @@ def viterbi(e,q, sentence):
         word = sentence[k]
         # print (word)
 
-        node_max = [] #every state
+        
         for v in range(len(T)):
             temp = [] #array within node to be maxed
             for u in range(len(T)):
-                value = pi1[u][k-1] * q.get((T[v], T[u]),0) * e.get((word, T[v]),0) 
+                value = pi1[u][k-1][1] * q.get((T[v], T[u]),0) * e.get((word, T[v]),0) 
                 temp.append(value)
-                # print (T[v], T[u])
             max_value = max(temp)
-            max_index = temp.index(max_value)
-            pi1[v][k] = max_value
-            node_max.append(max_value)
-        pi_index.append(node_max.index(max(node_max)))
+            parent_node = temp.index(max_value) #index of parent node
+            pi1[v][k] = (parent_node, max_value)
+            # print(pi1[v][k])
 
     # ---- Last Pi ---- #
-    last_pi = []
+    temp_last_pi = []
     for i in range(len(T)):    
-        value = pi1[i][len(sentence)-1] * q.get(('STOP',T[i]),0) 
-        last_pi.append(value)
-    pi_index.append(last_pi.index(max(last_pi))) #save highest starting probability
+        value = pi1[i][len(sentence)-1][1] * q.get(('STOP',T[i]),0) 
+        temp_last_pi.append(value)
+    max_value = max(temp_last_pi)
+    parent_node = temp_last_pi.index(max_value)
+    last_pi = (parent_node, max_value)
 
     # ------- backtracking --------#
     tags = []
-    for i in range(0,len(sentence)):
-        index = pi_index[-i]
-        p = T[index]
-        tags.append(p)
+    prev_node = last_pi[0]
+    tags.append(T[prev_node])
+    for i in range(1,len(sentence)):
+        yn = pi1[prev_node][-i] #returns (index of node, probability)
+        index = yn[0]
+        tags.append(T[index])
+        prev_node = index
     tags.reverse()
     return tags
-    # print(tags)
+
 
 # filename = "/Users/ganr/Desktop/ML/Project/EN/train"
 dev_in = "/Users/ganr/Desktop/ML/Project/EN/dev.in"
