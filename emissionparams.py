@@ -13,7 +13,9 @@ def train(file=None, k=1):
         for line in f.readlines():
             if line == "\n":
                 continue
-            word, tag = line.split()
+            line = line.split()
+            word = line[0]
+            tag = line[len(line) - 1]
             if word not in obs:
                 obs.append(word)
             if tag not in tags:
@@ -41,5 +43,11 @@ def calc_e(y_count_dict, emission_count_dict, k):
         e[("#UNK#", tag)] = k / (y_count_dict[tag] + k)  
     return e
 
-#filename = "/Users/ganr/Desktop/ML/Project/EN/train" #change the file name here to run
-e_dict = train(filename)
+# filename = "/Users/ganr/Desktop/ML/Project/SG/train" #change the file name here to run
+# e_dict = train(filename)
+
+def get_words(emission_count_dict):
+    words = []
+    for (word, tag) in emission_count_dict.keys():
+        words.append(word)
+    return words

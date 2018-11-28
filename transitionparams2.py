@@ -71,6 +71,16 @@ def estimateTransition(train_file):
         q[(tuv_t, tuv_u, tuv_v)] = count_tuv / counts_tu_dict[(tuv_t, tuv_u)]
     return q
 
+def get_sentences(dev_in): #dev in is file
+    #get sentence
+    with open(dev_in, 'r', encoding="utf-8") as f:
+        dev = f.read().rstrip().split('\n\n')
+    sentences = [] #array of each word in a sentence
+    for i in range(len(dev)):
+        sentences.append(dev[i].splitlines()) 
+        
+    return sentences
+
 if __name__ == "__main__":
     if len(sys.argv) > 2:
         print ("Usage on Windows:  python transitionparams2.py [train file]")
