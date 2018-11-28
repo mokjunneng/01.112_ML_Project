@@ -22,15 +22,12 @@ def viterbi(e,q, sentence):
     for i in range(len(T)):    
         value = q.get((T[i],'START'),0) * e.get((sentence[0], T[i]), 0)   
         pi1[i][0] = ('START', value)
-        # print (pi1[i][0]) 
     # ----- for second word / col to k --- #
     for k in range(1, len(sentence)):
         if sentence[k] not in xs:
             sentence[k] = '#UNK#'
         word = sentence[k]
-        # print (word)
 
-        
         for v in range(len(T)):
             temp = [] #array within node to be maxed
             for u in range(len(T)):
@@ -39,7 +36,6 @@ def viterbi(e,q, sentence):
             max_value = max(temp)
             parent_node = temp.index(max_value) #index of parent node
             pi1[v][k] = (parent_node, max_value)
-            # print(pi1[v][k])
 
     # ---- Last Pi ---- #
     temp_last_pi = []
@@ -64,24 +60,9 @@ def viterbi(e,q, sentence):
 
 
 # filename = "/Users/ganr/Desktop/ML/Project/EN/train"
-dev_in = "/Users/ganr/Desktop/ML/Project/EN/dev.in"
+dev_in = "/Users/ganr/Desktop/ML/Project/FR/dev.in"
 output_file_name = "dev.p3.out"
 q = estimateTransition(filename)
-test_sentence = ['NO', 'Saints', 'R', '.', 'Buch', 'might', 'come', 'back', 'n', 'play', 'vs', 'Seahawks', 'on', 'Sunday', '??']
-tags = viterbi(e_dict, q, test_sentence)
-print (tags)
-
-
-def get_sentences(dev_in): #dev in is file
-    #get sentence
-    with open(dev_in, 'r') as f:
-        dev = f.read().rstrip().split('\n\n')
-    sentences = [] #array of each word in a sentence
-    for i in range(len(dev)):
-        sentences.append(dev[i].splitlines()) 
-        
-    return sentences
-
 
 def generate_result(dev_in): #for the whole file
     test = get_sentences(dev_in) 
@@ -97,11 +78,12 @@ def generate_result(dev_in): #for the whole file
     return result
     
 
-# def create_test_result_file(test_result, filename):
-#     with open(filename, "w") as f:
-#         f.write(test_result)
-#     print (filename)
-# result = generate_result(dev_in)
-# create_test_result_file(result, "dev.p3.out")
 
+# # filesave_dir = os.path.join("/Users/ganr/Desktop/ML/Project/", "dev.p3.out")    
+def create_test_result_file(test_result, filename):
+    with open(filename, "w") as f:
+        f.write(test_result)
+
+result = generate_result(dev_in)
+create_test_result_file(result, output_file_name)
 
