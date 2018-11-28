@@ -61,3 +61,15 @@ def estimateTransition(train):
                 q[(y_i, y_j)] = counts_uv.get((y_j, y_i)) / count_y
     # print (q)    
     return q
+
+
+
+def get_sentences(dev_in): #dev in is file
+    #get sentence
+    with open(dev_in, 'r') as f:
+        dev = f.read().rstrip().split('\n\n')
+    sentences = [] #array of each word in a sentence
+    for i in range(len(dev)):
+        sentences.append(dev[i].splitlines()) 
+        
+    return sentences
