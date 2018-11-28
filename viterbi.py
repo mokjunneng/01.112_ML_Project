@@ -59,10 +59,6 @@ def viterbi(e,q, sentence):
     return tags
 
 
-# filename = "/Users/ganr/Desktop/ML/Project/EN/train"
-dev_in = "/Users/ganr/Desktop/ML/Project/FR/dev.in"
-output_file_name = "dev.p3.out"
-q = estimateTransition(filename)
 
 def generate_result(dev_in): #for the whole file
     test = get_sentences(dev_in) 
@@ -78,12 +74,21 @@ def generate_result(dev_in): #for the whole file
     return result
     
 
-
-# # filesave_dir = os.path.join("/Users/ganr/Desktop/ML/Project/", "dev.p3.out")    
 def create_test_result_file(test_result, filename):
     with open(filename, "w") as f:
         f.write(test_result)
 
-result = generate_result(dev_in)
-create_test_result_file(result, output_file_name)
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print ('Please make sure you have installed Python 3.4 or above!')
+        print ("Usage on Windows:  python emission.py [train file] [dev.in file]")
+        print ("Usage on Linux/Mac:  python3 emission.py [train file] [dev.in file]")
+        sys.exit()
+
+    q = estimateTransition(sys.argv[1])
+    e_dict = train(sys.argv[1])
+    result = generate_result(sys.argv[2])
+
+    create_test_result_file(result, "dev.p3.out")
 
