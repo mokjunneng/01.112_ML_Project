@@ -22,7 +22,12 @@ def viterbi(e,q, sentence): # 2nd-order
 
     for i in range(len(T)): # i current
         for j in range(len(T)): # j previous
-            value = q.get(('START',T[j],T[i]),0) * e.get((sentence[0], T[i]), 0) * 10000
+            value = q.get(('START',T[j],T[i]),0) * e.get((sentence[0], T[i]), 0) *10000
+            try:
+                value = math.log(value)
+            except:
+                value = 0.00001
+                value = math.log(value)
             # print (value)
             pi1[i][j][1] = (('START',j), value)
 
@@ -36,7 +41,12 @@ def viterbi(e,q, sentence): # 2nd-order
             temp = [[0.0] for x in range(len(T))] # array within node to be maxed
             for u in range(len(T)): # u previous node
                 for t in range(len(T)): # t pre-previous node
-                    value = pi1[u][t][k-1][1] * q.get((T[t], T[u], T[v]),0) * e.get((word, T[v]),0) * 10000
+                    value = pi1[u][t][k-1][1] * q.get((T[t], T[u], T[v]),0) * e.get((word, T[v]),0)*10000
+                    try:
+                        value = math.log(value)
+                    except:
+                        value = 0.00001
+                        value = math.log(value)
                     # print (value)
                     temp[u].append(value)
                 max_value = max(max(temp))
@@ -47,7 +57,12 @@ def viterbi(e,q, sentence): # 2nd-order
     for i in range(len(T)): # i pre
         for j in range(len(T)): # j pre-previous
             
-            value = pi1[i][j][len(sentence)-1][1] * q.get((T[i],T[j],'STOP'),0) * 10000
+            value = pi1[i][j][len(sentence)-1][1] * q.get((T[i],T[j],'STOP'),0)*10000
+            try:
+                value = math.log(value)
+            except:
+                value = 0.00001
+                value = math.log(value)
             # print (value)
             temp_last_pi[i][j] = value
 
@@ -58,8 +73,8 @@ def viterbi(e,q, sentence): # 2nd-order
     print ("---------------backtracking----------------")
     tags = []
     prev_prev_node, prev_node = last_pi[0]
-    tags.append(T[prev_prev_node])
     tags.append(T[prev_node])
+    tags.append(T[prev_prev_node])
     for k in range(1,len(sentence)-1):
         yn = pi1[prev_node][prev_prev_node][-k] # returns (index of node, probability)
         index = yn[0] # (t,u)
