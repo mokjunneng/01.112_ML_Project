@@ -4,10 +4,11 @@ import sys
 # Global variables
 tags = []
 obs = []
+emission_count_dict = {}
 
 def train(file=None, k=1):
     y_count_dict = {} 
-    emission_count_dict = {}
+    
 
     with open(file, "r") as f:
         for line in f.readlines():
@@ -43,8 +44,6 @@ def calc_e(y_count_dict, emission_count_dict, k):
         e[("#UNK#", tag)] = k / (y_count_dict[tag] + k)  
     return e
 
-# filename = "/Users/ganr/Desktop/ML/Project/SG/train" #change the file name here to run
-# e_dict = train(filename)
 
 def get_words(emission_count_dict):
     words = []

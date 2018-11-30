@@ -3,14 +3,13 @@ from emissionparams import *
 
 def viterbi(e,q, sentence):
     sentence = sentence.copy()
-    result = []
-    for i in zip(*e_dict.keys()):
-        result.append(list((set(i))))
 
-    xs = result[0] #the list of words
-    T = result[1]
+    T = get_tags(counts)
     T.append('START')
     T.append('STOP') #T is the array of tags with stop and start state
+
+    xs = get_words(emission_count_dict)
+
     
     ## --- Initialising array --- ##
     pi1 = [[0 for x in range(len(sentence))] for y in range(len(T))]  #x is number of words (col) #y is number of states/tags

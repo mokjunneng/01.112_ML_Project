@@ -1,11 +1,15 @@
 #part 3a
+
+#global variable tag
+counts = {} #number of occurence for each tag (u)
+
 def estimateTransition(train):
     
     #train is file name
     with open(train, 'r') as f:
         data = f.read().rstrip().splitlines() #removes empty array at the end and splits each line into an array
  
-    counts = {} #number of occurence for each tag (u)
+    # counts = {}
     counts_uv = {} #count transition from u --> v
     count_start = 1 #alternative way to calc the number of start / end tag
     
@@ -59,7 +63,6 @@ def estimateTransition(train):
             # print (y_i, y_j)
             if ((y_j, y_i) in counts_uv):
                 q[(y_i, y_j)] = counts_uv.get((y_j, y_i)) / count_y
-    # print (q)    
     return q
 
 
@@ -73,3 +76,10 @@ def get_sentences(dev_in): #dev in is file
         sentences.append(dev[i].splitlines()) 
         
     return sentences
+
+
+def get_tags(counts):
+    tags = []
+    for key, value in counts.items():
+        tags.append(key)
+    return tags
