@@ -9,11 +9,13 @@ def train(file=None, k=1):
     y_count_dict = {} 
     emission_count_dict = {}
 
-    with open(file, "r") as f:
+    with open(file, "r",  encoding="utf-8") as f:
         for line in f.readlines():
             if line == "\n":
                 continue
-            word, tag = line.split()
+            line = line.split()
+            word = line[0]
+            tag = line[len(line) - 1]
             if word not in obs:
                 obs.append(word)
             if tag not in tags:
@@ -43,7 +45,7 @@ def calc_e(y_count_dict, emission_count_dict, k):
 
 def test(params, file=None):
     tag_sequences = []
-    with open(file, "r") as f:
+    with open(file, "r", encoding="utf-8") as f:
         tag_sequence = []
         for l in f.readlines():
             if l == "\n":
@@ -65,7 +67,7 @@ def test(params, file=None):
     return tag_sequences
 
 def create_test_result_file(test_result, filename):
-    with open(filename, "w") as f:
+    with open(filename, "w",  encoding="utf-8") as f:
         for sequence in test_result:
             for word, tag in sequence:
                 f.write(f"{word} {tag}\n")
