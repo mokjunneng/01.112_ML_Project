@@ -4,10 +4,11 @@ import sys
 # Global variables
 tags = []
 obs = []
+emission_count_dict = {}
 
 def train(file=None, k=1):
     y_count_dict = {} 
-    emission_count_dict = {}
+    # emission_count_dict = {}
 
     with open(file, "r", encoding="utf-8") as f:
         for line in f.readlines():

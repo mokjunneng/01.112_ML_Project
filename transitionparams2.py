@@ -1,13 +1,15 @@
 #part 4a
 import sys
 
+counts_tu_dict = {} #number of occurence for each tag pair (t,u)
+
 def estimateTransition(train_file):
     
     with open(train_file, 'r', encoding="utf-8") as f:
         data = f.read().rstrip().splitlines() #removes empty array at the end and splits each line into an array
 
     counts_tuv_dict = {} #count transition from t,u --> v
-    counts_tu_dict = {} #number of occurence for each tag pair (t,u)
+    # counts_tu_dict = {} #number of occurence for each tag pair (t,u)
     
     for i in range(len(data)-2):
         # print ("Reading line: {0}".format(i))
@@ -19,7 +21,7 @@ def estimateTransition(train_file):
         if (len(line_t) != 0 and len(line_u) != 0): 
             word_t, tag_t = line_t.split(" ")[0],line_t.split(" ")[-1]
             word_u, tag_u = line_u.split(" ")[0],line_u.split(" ")[-1]
-            # if v line not empty <t,u,v>
+            # if v line not empty <t,X,v>
             if (len(line_v) != 0): 
                 word_v, tag_v = line_v.split(" ")[0],line_v.split(" ")[-1]
             else: # <t,u,stop>
@@ -80,6 +82,14 @@ def get_sentences(dev_in): #dev in is file
         sentences.append(dev[i].splitlines()) 
         
     return sentences
+
+def get_tags(counts):
+    tags = []
+    for key, value in counts.items():
+        if (key[0] not in tags):
+            tags.append(key[0])
+    tags.append('STOP')
+    return tags
 
 if __name__ == "__main__":
     if len(sys.argv) > 2:
