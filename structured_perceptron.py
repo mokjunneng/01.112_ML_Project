@@ -52,10 +52,26 @@ class StructuredPerceptron(object):
         return feature_counts
 
     def get_features(self, word, tag, previous_tag):
+        word_lower = word.lower()
+        prefix = word_lower[:3]
+        suffix = word_lower[-3:]
+
         features = [
-            (previous_tag, tag),
-            (word, tag)
-        ]
+                    'TAG_%s' % (tag),                       # current tag
+                    'TAG_BIGRAM_%s_%s' % (previous_tag, tag),  # tag bigrams
+                    'WORD+TAG_%s_%s' % (word, tag),            # word-tag combination
+                    'WORD_LOWER+TAG_%s_%s' % (word_lower, tag),# word-tag combination (lowercase)
+                    'UPPER_%s_%s' % (word[0].isupper(), tag),  # word starts with uppercase letter
+                    'DASH_%s_%s' % ('-' in word, tag),         # word contains a dash
+                    'PREFIX+TAG_%s_%s' % (prefix, tag),        # prefix and tag
+                    'SUFFIX+TAG_%s_%s' % (suffix, tag),        # suffix and tag
+
+                    #########################
+                    # ADD MOAAAAR FEATURES! #
+                    #########################
+                    'WORD+TAG_BIGRAM_%s_%s_%s' % (word, tag, previous_tag),
+                    'SUFFIX+2TAGS_%s_%s_%s' % (suffix, previous_tag, tag),
+                    'PREFIX+2TAGS_%s_%s_%s' % (prefix, previous_tag, tag)]
         return features
     
     # def fit_average(self, train_data, no_of_epochs=5, learning_rate=0.2):
@@ -164,7 +180,7 @@ if __name__ == "__main__":
     train_data = get_training_data(sys.argv[1])
 
     sp = StructuredPerceptron()
-    sp.fit(train_data, no_of_epochs=5, learning_rate=0.2)
+    sp.fit(train_data, no_of_epochs=10, learning_rate=0.2)
     sp.predict(sys.argv[2], sys.argv[3])
     # Train multiple models of different hyperparameter values - no. of epochs, learning rate
     # for i in range(1, 10, 2):

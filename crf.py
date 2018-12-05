@@ -39,7 +39,7 @@ class CRF(object):
             algorithm="lbfgs",
             c1=0.1,
             c2=0.1,
-            max_iterations=100,
+            max_iterations=1000,
             all_possible_transitions=True
         )
         return crf.fit(x_train, y_train)
