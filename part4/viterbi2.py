@@ -5,10 +5,9 @@ import math
 
 def viterbi(e,q, sentence): # 2nd-order
     sentence = sentence.copy()
-    T = get_tags(counts_tu_dict)
     # print (T)
     xs = get_words(emission_count_dict)
-    print (xs)
+    # print (xs)
     
     ## --- Initialising 3d array: pi1[current node y1][previous node y2][current node x] --- ##
     pi1 = [[[0 for x in range(len(sentence)-1)] for y2 in range(len(T))] for y1 in range(len(T))]  #x is number of words (col) #y is number of states/tags
@@ -31,10 +30,11 @@ def viterbi(e,q, sentence): # 2nd-order
         word = sentence[k]
 
         for v in range(len(T)): # v current node
-            temp = [[0.0 for x in range(len(T))] for y in range(len(T))] # array within node to be maxed
+            temp = [[0 for x in range(len(T))] for y in range(len(T))] # array within node to be maxed
             for u in range(len(T)): # u previous node
                 for t in range(len(T)): # t pre-previous node
                     value = pi1[u][t][k-2][1] * q.get((T[t], T[u], T[v]),0) * e.get((word, T[v]),0) * 100
+                    # print(value)
                     temp[u][t] = value
                 max_value = max(max(temp))
                 parent_u, parent_t = index2d(temp,max_value) # index of parent node
@@ -87,6 +87,28 @@ def index2d(list2d, value):
     return next((i, j) for i, lst in enumerate(list2d) 
                 for j, x in enumerate(lst) if x == value)
 
+def get_sentences(dev_in): #dev in is file
+    #get sentence
+    with open(dev_in, 'r', encoding="utf-8") as f:
+        dev = f.read().rstrip().split('\n\n')
+    sentences = [] #array of each word in a sentence
+    for i in range(len(dev)):
+        sentences.append(dev[i].splitlines()) 
+        
+    return sentences
+
+def get_sentences(dev_in): #dev in is file
+    #get sentence
+    with open(dev_in, 'r', encoding="utf-8") as f:
+        dev = f.read().rstrip().split('\n\n')
+    sentences = [] #array of each word in a sentence
+    for i in range(len(dev)):
+        sentences.append(dev[i].splitlines()) 
+        
+    return sentences
+
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print ('Please make sure you have installed Python 3.4 or above!')
@@ -94,7 +116,8 @@ if __name__ == "__main__":
         print ("Usage on Linux/Mac:  python3 viterbi2.py [train file] [dev.in file]")
         sys.exit()
 
-    q = estimateTransition(sys.argv[1])
+    train_file = open(sys.argv[1], "r", encoding="utf-8")
+    q,T = estimateTransition(train_file)
     e_dict = train(sys.argv[1])
     result = generate_result(sys.argv[2])
     path = os.path.dirname(sys.argv[1])

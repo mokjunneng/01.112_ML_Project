@@ -216,8 +216,8 @@ def train_classifier():
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print ('Please make sure you have installed Python 3.4 or above!')
-        print ("Usage on Windows:  python emission.py [train file] [dev.in file]")
-        print ("Usage on Linux/Mac:  python3 emission.py [train file] [dev.in file]")
+        print ("Usage on Windows:  python MEMM.py [train file] [dev.in file]")
+        print ("Usage on Linux/Mac:  python3 MEMM.py [train file] [dev.in file]")
         sys.exit()
 
 
