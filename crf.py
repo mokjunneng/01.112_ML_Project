@@ -60,6 +60,8 @@ class CRF(object):
             conf_switch + '_word.lower()': word.lower(),  
             conf_switch + '_word[-3]': word[-3:],  
             conf_switch + '_word[-2]': word[-2:],  
+            conf_switch + '_word[3]': word[:3],
+            conf_switch + '_word[2]': word[:2],
             conf_switch + '_word.isupper()': word.isupper(),  
             conf_switch + '_word.istitle()': word.istitle(),  
             conf_switch + '_word.isdigit()': word.isdigit(),  
