@@ -6,6 +6,7 @@ global_words = []
 
 def get_training_data(file):
     training_instances = []  # all the sentences in training set
+    tags = set(["START"])
     with open(file, "r", encoding="utf-8") as f:
         current_words = []
         current_tags = []
@@ -18,9 +19,10 @@ def get_training_data(file):
                 line = line.split()
                 word = line[0]
                 tag = line[-1]
+                tags.add(tag)
                 current_words.append(word)
                 current_tags.append(tag)
-    return training_instances
+    return training_instances, list(tags)
 
 
 def get_emission_transition_tag_count(file):
