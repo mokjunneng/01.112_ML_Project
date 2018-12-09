@@ -11,15 +11,18 @@ class StructuredPerceptron(object):
     def __init__(self):
         self.feature_weights = defaultdict(float)
         self.feature_weights_average = defaultdict(float)
+        self.total_feature_weights = defaultdict(tuple)
         # self.emission_counts = emission_counts
         # self.transition_counts = transition_counts
         self.tags = set()
+        self.i = 0
                     
     def fit(self, train_data, no_of_epochs=5, learning_rate=0.2):
         for epoch in range(no_of_epochs):
 
             correct = 0
             total = 0
+            start = time.clock()
             print(f"Training epoch {epoch+1} with learning rate {learning_rate} ....")
 
             for i, (words, tags) in enumerate(train_data):
@@ -238,5 +241,5 @@ if __name__ == "__main__":
     train_data = get_training_data(sys.argv[1])
 
     sp = StructuredPerceptron()
-    sp.fit(train_data, no_of_epochs=20, learning_rate=0.2)
+    sp.fit(train_data, no_of_epochs=50, learning_rate=0.2)
     sp.predict(sys.argv[2], sys.argv[3])
