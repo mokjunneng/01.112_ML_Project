@@ -1,7 +1,6 @@
 from utils import get_training_data
 import sys
 import yaml
-import sklearn_crfsuite
 from collections import defaultdict, Counter
 import numpy as np
 # from numpy import empty, zeros, ones, log, exp, add, int32
@@ -13,7 +12,6 @@ class CRF(object):
         self.feature_weights = defaultdict(float)
         self.tags = tags
         self.train_data = train_data
-        # self.feature_conf = self.load_yaml_conf(feature_file)
 
     def train(self, iterations=5, learning_rate=0.2):
         train_data = self.train_data
@@ -28,7 +26,6 @@ class CRF(object):
                     w[feature] += rate - 0.1 * w[feature]
             end = time.clock()
             print(f"Trained {i+1}-th iteration for {end - start} seconds")
-            # print(self.feature_weights)
      
     def predict(self, test_file, outfile):
         test_data = self.read_test_file(test_file)
@@ -75,16 +72,6 @@ class CRF(object):
                             best_edge[(i+1, current_tag)] = (i, prev_tag)
                             curr_best_score = score
 
-        # # Last layer
-        # curr_best_score = float('-Inf')
-        # for tag in tags: 
-        #     feature_weights = self.feature_weights[(tag, "STOP")]
-        #     score = best_score[(N, tag)] + feature_weights
-        #     if score > curr_best_score:
-        #         best_score[(N+1, "STOP")] = score
-        #         best_edge[(N+1, "STOP")] = (N, tag)
-        #         curr_best_score = score
-
         # Backtrack   
         predicted_tags = [""] * len(words)
         curr_tag = ""
@@ -102,46 +89,17 @@ class CRF(object):
             curr_tag = best_tag
     
         return predicted_tags
-    
-    def viterbi2(self, words):
-        N = len(words)
-        M = len(self.tags)
-        (g0, g) = self.get_all_g(words)
-
-        best_score = np.ones((N, M)) * -1
-        V = g0
-        for n in range(1,N):
-            U = np.empty(M)
-            for m in range(M):
-                w = V + g[n-1, :, m]
-                best_score[n, m] = b = w.argmax()
-                U[m] = w[b]
-            V = U
-        # extract the best path by brack-tracking
-        y = V.argmax()
-        trace = []
-        for n in reversed(range(N)):
-            trace.append(y)
-            y = best_score[n, y]
-        trace.reverse()
-        return trace
         
     def get_expectation(self, words):
         """Expectation term"""
         N = len(words)
         M = len(self.tags)
 
-        # start_glob_features = time.clock()
         global_features = self.get_features_for_all_possible_sequences(words)
-        # end_glob_features = time.clock()
-        # print(f"getting global features takes {end_glob_features - start_glob_features} seconds.")
 
-        # start = time.clock()
         g0, g = self.get_all_g(words)
         forwardprobs = self.get_forward(g0, g, N)
         backwardprobs = self.get_backward(g, N)
-        # end = time.clock()
-        # print(f"Calculating forward backward probabilities takes {end - start} seconds.")
 
         logZ = self.logsumexp(forwardprobs[N-1, :])
         expectation = defaultdict(float)
@@ -284,10 +242,12 @@ class CRF(object):
                 f.write("\n")
 
 if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print ('Please make sure you have installed Python 3.4 or above!')
+        print ("Usage on Windows:  python emission.py [train file] [dev.in file]")
+        print ("Usage on Linux/Mac:  python3 emission.py [train file] [dev.in file]")
+        sys.exit()
     train_data, tags = get_training_data(sys.argv[1])
     crf = CRF(tags, train_data)
-    crf.train(10)
+    crf.train(iterations=10)
     crf.predict(sys.argv[2], sys.argv[3])
-    # crf.fit(train_data)
-    # crf.predict(sys.argv[2], sys.argv[3])
-    # print(crf.load_yaml_conf("features.yaml"))
