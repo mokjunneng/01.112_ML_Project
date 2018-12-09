@@ -5,9 +5,7 @@ import math
 
 def viterbi(e,q, sentence): # 2nd-order
     sentence = sentence.copy()
-    # print (T)
     xs = get_words(emission_count_dict)
-    # print (xs)
     
     ## --- Initialising 3d array: pi1[current node y1][previous node y2][current node x] --- ##
     pi1 = [[[0 for x in range(len(sentence)-1)] for y2 in range(len(T))] for y1 in range(len(T))]  #x is number of words (col) #y is number of states/tags
@@ -20,9 +18,6 @@ def viterbi(e,q, sentence): # 2nd-order
             value = q.get(('START',T[j],T[i]),0) * e.get((sentence[0], T[i]), 0) * 100
             pi1[i][j][0] = (('START',j), value)
 
-    # print("first round")
-    # print (pi1)
-
     # ----- for third word / col to k --- #
     for k in range(2, len(sentence)):
         if sentence[k] not in xs:
@@ -34,12 +29,10 @@ def viterbi(e,q, sentence): # 2nd-order
             for u in range(len(T)): # u previous node
                 for t in range(len(T)): # t pre-previous node
                     value = pi1[u][t][k-2][1] * q.get((T[t], T[u], T[v]),0) * e.get((word, T[v]),0) * 100
-                    # print(value)
                     temp[u][t] = value
                 max_value = max(max(temp))
                 parent_u, parent_t = index2d(temp,max_value) # index of parent node
                 pi1[v][u][k-1] = ((parent_t, parent_u), max_value) # only 1 max parent pair for each current node
-    # print (pi1)
     # ---- Last Pi ---- #
     temp_last_pi = [[0 for x in range(len(T))] for y in range(len(T))]
     for i in range(len(T)): # i pre
@@ -50,24 +43,20 @@ def viterbi(e,q, sentence): # 2nd-order
     max_value = max(max(temp_last_pi))
     parent_u, parent_t = index2d(temp_last_pi,max_value)
     last_pi = ((parent_t, parent_u), max_value) # pi for 'STOP' node
-    # print (last_pi)
-    # print ("---------------backtracking----------------")
+    #---------------backtracking----------------
     tags = []
     prev_prev_node, prev_node = last_pi[0]
     tags.append(T[prev_node])
-    tags.append(T[prev_prev_node])
     for k in range(len(sentence)-1):
         yn = pi1[prev_node][prev_prev_node][-k-1] # returns (index of node, probability)
         index = yn[0] # (t,u)
         tags.append(T[index[1]]) # only track to previous node u (not preprevious t)
         prev_prev_node, prev_node = index
     tags.reverse()
-    # print("tags: {0}".format(tags))
     return tags
 
 def generate_result(dev_in): #for the whole file
     test = get_sentences(dev_in) 
-    # tags = []
     result = ""
     for sentence in test:
         tag_sentence = viterbi(e_dict, q, sentence) #tags for every sentence
@@ -120,6 +109,6 @@ if __name__ == "__main__":
     q,T = estimateTransition(train_file)
     e_dict = train(sys.argv[1])
     result = generate_result(sys.argv[2])
-    path = os.path.dirname(sys.argv[1])
+    path = os.path.dirname(sys.argv[2])
 
     create_test_result_file(result, "{0}/dev.p4.out".format(path))
