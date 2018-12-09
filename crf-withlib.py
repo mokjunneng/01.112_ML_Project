@@ -124,8 +124,13 @@ class CRF(object):
                 f.write("\n")
 
 if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print ('Please make sure you have installed Python 3.4 or above!')
+        print ("Usage on Windows:  python emission.py [train file] [dev.in file] [result filepath]")
+        print ("Usage on Linux/Mac:  python3 emission.py [train file] [dev.in file] [result filepath]")
+        sys.exit()
+
     train_data = get_training_data(sys.argv[1])
     crf = CRF()
     crf.fit(train_data)
     crf.predict(sys.argv[2], sys.argv[3])
-    # print(crf.load_yaml_conf("features.yaml"))
