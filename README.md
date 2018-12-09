@@ -52,16 +52,21 @@ python part4/viterbi2.py data/EN/train.dev data/EN/dev.in
 
 To try performance of different models, 3 different approaches had been implemented for [part5](part5) design challenge, results and explanation can be found in our final report:  
 
-- [CRF](part5/crf.py) (Build from scratch)
+- [CRF](part5/crf-nolib.py) (Build from scratch)
 
   ```shell
-  python part5/MEMM.py [train file] [dev.in file]
+  python part5/crf-nolib.py [train file] [dev.in file] [result filepath]
   ```
 
 - [Perceptron](part5/structured_perceptron.py) (Build from scratch)
 
   ```shell
-  python part5/MEMM.py [train file] [dev.in file]
+  python part5/structured_perceptron.py [train file] [dev.in file] [result filepath]
+  ```
+- [CRF](part5/crf-withlib.py) (Build with external ML packages)
+  
+  ```shell
+  python part5/structured_perceptron.py [train file] [dev.in file] [result filepath]
   ```
 
 - [MEMM](part5/MEMM.py) (Build with external ML packages)
@@ -70,6 +75,11 @@ To try performance of different models, 3 different approaches had been implemen
   python part5/MEMM.py [train file] [dev.in file]
   ```
 
+- [HMM](part5/HMM_turingsmoothing/viterbi.py)
+  
+  ```shell
+  python part5/HMM_turingsmoothing/viterbi.py [train file] [dev.in file]
+  ```
 ---
 
 ### Evaluate
